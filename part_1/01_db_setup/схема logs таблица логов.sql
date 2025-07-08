@@ -12,13 +12,13 @@ CREATE SCHEMA LOGS;
 
 CREATE TABLE logs.uploads_in_ds
 (
-    log_id SERIAL PRIMARY KEY,         
-    load_start_tstamp TIMESTAMP NOT NULL, 
+    	log_id SERIAL PRIMARY KEY,         
+   	load_start_tstamp TIMESTAMP NOT NULL, 
 	load_end_tstamp TIMESTAMP, 
-	destination_table TEXT NOT NULL,                        
-	user_name TEXT,
-	pk_date DATE,
-	pk_second_part NUMERIC,
-	operation TEXT
+	destination_table TEXT NOT NULL, --таблица для загрузки данных                        
+	user_name TEXT, --пользователь, выполняющий загрузку
+	pk_date DATE, -- первое поле составного ключа в destination_table
+	pk_second_part NUMERIC, ---- второе поле составного ключа в destination_table
+	operation TEXT --insert or update
 );
 
