@@ -1,8 +1,8 @@
 import psycopg2
 import os
 from psycopg2.extras import execute_batch
-from upserts import * 
-from csv_to_df import *
+from demo_upsert_balance import * 
+from demo_csv_to_df_balance import *
 
 
 #db connection details from environmnet var
@@ -35,4 +35,4 @@ def upload(sql_upserts_list, df_list):
     except Exception as e:
         print("Data upload error: " + str(e))
 
-upload(sql_upserts_list[0], df_list[0])
+upload(ft_balance_f_upsert, ft_balance_f_df)
