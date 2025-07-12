@@ -83,7 +83,7 @@ BEGIN
 
 	UPDATE logs.uploads_in_ds
 		SET load_end_tstamp = (CURRENT_TIMESTAMP + interval '5 second')
-		WHERE log_id = lastval();
+		load_end_tstamp IS NULL;
 	
 RETURN NULL;
 
