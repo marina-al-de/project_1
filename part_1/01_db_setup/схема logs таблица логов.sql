@@ -10,6 +10,10 @@ CREATE SCHEMA LOGS;
 обновляемй таблицы, выполненное действие (insert/update).
 */
 
+/*
+ПРИМЕЧАНИЕ: в задаче 1.2 будут изменны названия таблицы logs.uploads_in_ds --> logs.logs_for_ds_dm и столбцов pk_date --> record_date, pk_second_part--> record_account.
+*/
+
 CREATE TABLE logs.uploads_in_ds
 (
     	log_id SERIAL PRIMARY KEY,         
