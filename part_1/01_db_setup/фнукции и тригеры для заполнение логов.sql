@@ -9,6 +9,14 @@ $func$
 	-- объявляем переменные для хранения составного PK для каждой таблицы кроме, DS.FT_POSTING_F, т.к. у неё нет PK согласно условию задания
 	-- diff_found - флаг, который обозначает были ли внесены изменения в строку при очередном update. при отсутсвии изменений запись в таблицу 
 	-- logs.uploads_in_ds не производится.
+
+	/* 
+	ПРИМЕЧАНИЕ: в задаче 1.2  данная фукция будет изменена:
+		- поменяется название таблицы логов  с logs.uploads_in_ds на logs.logs_for_ds_dm;
+		- поменяются названия столбцов pk_date --> record_date, pk_second_part --> record_account;
+		- в соответсвии с новыми названиями столбцов поменяются названия переменных pk_date --> record_date, pk_second_part --> record_account;
+		- добавится блок, чтобы получиить record_date и record_account у витрин из слоя DM с учётом операций удаления или вставки
+	*/
 	
 DECLARE pk_date DATE;
 		pk_second_part NUMERIC;
@@ -74,6 +82,11 @@ $func$ LANGUAGE plpgsql;
 Создаём функцию для добавления времени окончания загрузки с учётом интервала в 5 секунд. 
 */
 
+/*
+ПРИМЕЧАНИЕ: в задаче 1.2  данная фукция будет изменена:
+	- поменяется название таблицы логов  с logs.uploads_in_ds на logs.logs_for_ds_dm;
+	- поменяется блок WHERE log_id = lastval() -->  WHERE log_id = SELECT MAX(log_id) FROM logs.logs_for_ds_dm
+*/
 CREATE OR REPLACE FUNCTION ds.update_logs_end() 
 	RETURNS TRIGGER AS
 
@@ -83,7 +96,7 @@ BEGIN
 
 	UPDATE logs.uploads_in_ds
 		SET load_end_tstamp = (CURRENT_TIMESTAMP + interval '5 second')
-		load_end_tstamp IS NULL;
+		WHERE log_id = lastval();
 	
 RETURN NULL;
 
