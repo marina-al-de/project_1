@@ -11,7 +11,7 @@ CREATE SCHEMA LOGS;
 */
 
 /*
-ПРИМЕЧАНИЕ: в задаче 1.2 будут изменны названия таблицы logs.uploads_in_ds --> logs.logs_for_ds_dm и столбцов pk_date --> record_date, pk_second_part--> record_account.
+ПРИМЕЧАНИЕ: в задаче 1.2 изменится название таблицы logs.uploads_in_ds --> logs.logs_for_ds_dm.
 */
 
 CREATE TABLE logs.uploads_in_ds
