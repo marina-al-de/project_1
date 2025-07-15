@@ -26,7 +26,7 @@ BEGIN
 	FROM ds.ft_balance_f bal 
 	LEFT JOIN currency_and_ex_rate_end_december curr 
 	ON bal.currency_rk = curr.currency_rk
-	WHERE bal.account_rk IN (SELECT account_rk from ds.md_account_d);
+	WHERE bal.account_rk IN (SELECT DISTINCT account_rk from ds.md_account_d);
 
 END;
 $$ language plpgsql;
