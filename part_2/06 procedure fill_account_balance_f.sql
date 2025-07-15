@@ -14,7 +14,7 @@ BEGIN
 
 	-- вычисляем сумму движений по счёту
 	WITH movements_on_account AS(
-		SELECT on_date, act.account_rk as account_rk, 
+		SELECT *, on_date, act.account_rk as account_rk, 
 			CASE char_type
 				WHEN 'А' THEN debet_amount - credit_amount 
 				WHEN 'П' THEN credit_amount - debet_amount
@@ -24,9 +24,10 @@ BEGIN
 				WHEN 'П' THEN credit_amount_rub - debet_amount_rub
 			END AS movement_amount_rub		
 		FROM dm.dm_account_turnover_f act 
-	INNER JOIN ds.md_account_d acc 
-	ON acc.account_rk = act.account_rk
-	WHERE on_date = i_OnDate
+		INNER JOIN ds.md_account_d acc 
+		ON acc.account_rk = act.account_rk
+			AND on_date BETWEEN acc.data_actual_date AND acc.data_actual_end_date 
+		WHERE on_date = i_OnDate
 	)
 
 	-- вычисляем баланс счёта на заданную дата и заполнеяем dm.dm_account_balance_f

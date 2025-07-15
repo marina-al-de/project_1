@@ -38,7 +38,7 @@ BEGIN
                 WHEN er.data_actual_date IS NULL THEN TRUE            
                 ELSE i_OnDate BETWEEN er.data_actual_date AND er.data_actual_end_date
             END
-)
+	)
 
 	--расчитываем суммы по дебиту и кредиту в рублях и загружаем полученные данные в витрину dm.dm_account_turnover_f
 	INSERT INTO dm.dm_account_turnover_f (on_date, account_rk, credit_amount, credit_amount_rub, debet_amount, debet_amount_rub)
