@@ -17,7 +17,7 @@ def download_to_csv(table_name):
     try:
         # SQLAlchemy engine
         connection_string = f"postgresql://{user}:{password}@{server}:{port}/{database}"
-        engine = create_engine(connection_string)
+        engine = create_engine(connection_string, isolation_level="AUTOCOMMIT")
 
         #timestamp for filename
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
