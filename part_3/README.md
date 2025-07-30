@@ -11,18 +11,14 @@
 
 В БД создаём витрину для формы 101 `dm.dm_f101_round_f`.
 
-Скрипт для создания таблицы:
-
-`part_3/01 create table dm.dm_f101_round_f.sql`
+[Скрипт для создания таблицы](https://github.com/marina-al-de/project_1/blob/main/part_3/01%20create%20table%20dm.dm_f101_round_f.sql)
 
 - **Логирование**
 
 Для логирования изменений в таблице `dm.dm_f101_round_f` воспользуемся ранее созданной таблицей для логов `logs.logs_for_ds_dm` и триггерными функциями `ds.update_logs_start()` и `ds.update_logs_end()`.
 Добавим триггеры для `dm.dm_f101_round_f`.
 
-Скрипт для триггеров:
-
-`part_3/02 trigger for logs.sql`
+[Скрипт для триггеров](https://github.com/marina-al-de/project_1/blob/main/part_3/02%20trigger%20for%20logs.sql)
 
 ## Заполнение формы 101
 
@@ -36,14 +32,11 @@
 
 Во втором СТЕ `bal_in_out` извлекаем из витрины `dm.dm_account_balance_f` суммы остатков за первый и последний день расчётного периода в рублях для рублёвых и не рублёвых счетов и группируем по балансовым счетам второго порядка. Чтобы определить является ли счёт валютным или рублёвым, реализовала ту же логику, что и в передыдущем СТЕ. 
 
-На последнем этапе объединяем остатки и обороты по счетам со справочной информацией из ds.md_ledger_account_s и загружаем полученные данные в витрину dm.dm_f101_round_f.
+На последнем этапе объединяем остатки и обороты по счетам со справочной информацией из `ds.md_ledger_account_s` и загружаем полученные данные в витрину `dm.dm_f101_round_f`.
 
-Скрипт процедуры:
-
-`part_3/03 procedure dm.fill_f101_round_f.sql`
+[Скрипт процедуры](https://github.com/marina-al-de/project_1/blob/main/part_3/03%20procedure%20dm.fill_f101_round_f.sql)
 
 ## Демонстрация
 
-Ссылка на видео с демонстрацией работы в файле:
+[Ссылка на видео с демонстрацией работы в файле](https://github.com/marina-al-de/project_1/blob/main/part_3/video_link.txt)
 
-`part_3/video_link.txt`
