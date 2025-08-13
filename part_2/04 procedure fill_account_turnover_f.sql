@@ -7,27 +7,25 @@ BEGIN
 
 	-- извлекаем сумму по дебиту и кредиту счёта на заданную дату
 	WITH postings_per_account AS(
-		SELECT COALESCE(p1.oper_date, p2.oper_date) AS oper_date,
-				COALESCE(credit_account_rk, debet_account_rk) AS account_rk, 
-				COALESCE(credit_amount, 0) AS credit_amount, 
-				COALESCE(debet_amount, 0) AS debet_amount
+		SELECT COALESCE(p1.credit_account_rk, p2.debet_account_rk) AS account_rk, 
+				COALESCE(p1.credit_amount, 0) AS credit_amount, 
+				COALESCE(p2.debet_amount, 0) AS debet_amount
 		FROM (
-			SELECT oper_date, credit_account_rk, SUM(credit_amount) AS credit_amount
+			SELECT credit_account_rk, SUM(credit_amount) AS credit_amount
 			FROM ds.ft_posting_f
 			WHERE oper_date = i_OnDate
-			GROUP BY 1, 2) p1 
+			GROUP BY credit_account_rk) p1 
 		FULL JOIN (
-			SELECT oper_date, debet_account_rk, SUM(debet_amount) AS debet_amount
+			SELECT debet_account_rk, SUM(debet_amount) AS debet_amount
 			FROM ds.ft_posting_f 
 			WHERE oper_date = i_OnDate
-			GROUP BY 1, 2) p2
+			GROUP BY debet_account_rk) p2
 		ON p1.credit_account_rk = p2.debet_account_rk
-			AND p1.oper_date = p2.oper_date
 	), 
 
 	-- извлекаем данные reduced_cource для account_rk  
 	accounts_with_dates_and_ex_rate AS (
-		SELECT account_rk, 
+		SELECT acc.account_rk, 
 				er.reduced_cource AS er_course
 		FROM ds.md_account_d acc
 		INNER JOIN ds.md_currency_d curr
@@ -42,15 +40,15 @@ BEGIN
 
 	--расчитываем суммы по дебиту и кредиту в рублях и загружаем полученные данные в витрину dm.dm_account_turnover_f
 	INSERT INTO dm.dm_account_turnover_f (on_date, account_rk, credit_amount, credit_amount_rub, debet_amount, debet_amount_rub)
-	SELECT oper_date, 
-		t1.account_rk AS account_rk, 
-		credit_amount::NUMERIC(23,8), 
-		(credit_amount*COALESCE(er_course,1))::NUMERIC(23,8) AS credit_amount_rub, 
-		debet_amount::NUMERIC(23,8), 
-		(debet_amount*COALESCE(er_course,1))::NUMERIC(23,8) AS debet_amount_rub
-	FROM postings_per_account t1
-	LEFT JOIN accounts_with_dates_and_ex_rate t2
-	ON t1.account_rk = t2.account_rk;
+	SELECT i_OnDate, 
+		p.account_rk AS account_rk, 
+		p.credit_amount::NUMERIC(23,8), 
+		(p.credit_amount*COALESCE(er.er_course,1))::NUMERIC(23,8) AS credit_amount_rub, 
+		p.debet_amount::NUMERIC(23,8), 
+		(p.debet_amount*COALESCE(er.er_course,1))::NUMERIC(23,8) AS debet_amount_rub
+	FROM postings_per_account p
+	LEFT JOIN accounts_with_dates_and_ex_rate er
+	ON p.account_rk = er.account_rk;
 			
 		
 END;
